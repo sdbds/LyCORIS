@@ -7,6 +7,11 @@ import torch.nn.utils.parametrize as parametrize
 
 from ..utils.quant import QuantLinears, log_bypass, log_suspect
 
+try:
+    from peft.tuners.tuners_utils import BaseTunerLayer
+except Exception:  # pragma: no cover - PEFT is optional
+    BaseTunerLayer = None
+
 
 class ModuleCustomSD(nn.Module):
     def __init__(self):
@@ -84,6 +89,15 @@ class LycorisBaseModule(ModuleCustomSD):
         super().__init__()
         self.lora_name = lora_name
         self.not_supported = False
+
+        self.peft_wrapper = None
+        if BaseTunerLayer is not None and isinstance(org_module, BaseTunerLayer):
+            self.peft_wrapper = org_module
+            base_layer = getattr(org_module, "base_layer", None)
+            if base_layer is None and hasattr(org_module, "get_base_layer"):
+                base_layer = org_module.get_base_layer()
+            if base_layer is not None:
+                org_module = base_layer
 
         self.module = type(org_module)
         if isinstance(org_module, nn.Linear):
