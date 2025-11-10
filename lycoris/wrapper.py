@@ -21,25 +21,10 @@ from .modules.boft import ButterflyOFTModule
 from .modules import get_module, make_module
 
 from .config import PRESET
+from .config_sdk import VALID_PRESET_KEYS
 from .utils.preset import read_preset
 from .utils import str_bool
 from .logging import logger
-
-
-VALID_PRESET_KEYS = [
-    "enable_conv",
-    "target_module",
-    "target_name",
-    "module_algo_map",
-    "name_algo_map",
-    "lora_prefix",
-    "use_fnmatch",
-    "unet_target_module",
-    "unet_target_name",
-    "text_encoder_target_module",
-    "text_encoder_target_name",
-    "exclude_name",
-]
 
 
 network_module_dict = {
