@@ -218,7 +218,9 @@ class PresetConfig:
     extra: Dict[str, Any] = field(default_factory=dict)
 
     @classmethod
-    def from_dict(cls, data: Mapping[str, Any], *, strict: bool = False) -> "PresetConfig":
+    def from_dict(
+        cls, data: Mapping[str, Any], *, strict: bool = False
+    ) -> "PresetConfig":
         unknown_keys = [key for key in data.keys() if key not in VALID_PRESET_KEYS]
         if unknown_keys:
             raise PresetValidationError(
@@ -259,7 +261,8 @@ class PresetConfig:
         maybe_set("target_name", self.target_name)
         if self.module_algo_map:
             data["module_algo_map"] = {
-                key: override.to_dict() for key, override in self.module_algo_map.items()
+                key: override.to_dict()
+                for key, override in self.module_algo_map.items()
             }
         if self.name_algo_map:
             data["name_algo_map"] = {
