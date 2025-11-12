@@ -46,7 +46,9 @@ def build_wrappers(module: nn.Module) -> list[LycorisNetwork]:
     return wrappers
 
 
-def run_cycles(module: nn.Linear, wrappers: list[LycorisNetwork], *, precise: bool, cycles: int) -> float:
+def run_cycles(
+    module: nn.Linear, wrappers: list[LycorisNetwork], *, precise: bool, cycles: int
+) -> float:
     original = module.weight.detach().clone()
     for _ in range(cycles):
         for wrapper in wrappers:
