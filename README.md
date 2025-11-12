@@ -265,19 +265,16 @@ See [docs/Conversion-scripts.md](docs/Conversion-scripts.md) for more informatio
 
 For full log, please see [Change.md](Change.md)
 
-### 2025/10/04 update to 3.3.0
+### 2025/11/12 update to 3.4.0
 
 #### New Features
 
-* Support multi adapter from #266, thanks @bghira !
+* Support high precision merge/unmerge, thanks @bghira !
 
 #### Improvements
 
-* Support more model such as Gemma2, HunyuanVideo, Wan ...
+* LyCORIS now use [config_sdk](/lycoris/config_sdk.py) for configuration related operation
 
-#### Bug fixes
-
-* BOFT shape issue resolved.
 
 ## Todo list
 

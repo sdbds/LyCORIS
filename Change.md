@@ -1,5 +1,15 @@
 # Change Log
 
+## 2024/11/12 update to 3.4.0
+
+#### New Features
+
+* Support high precision merge/unmerge, thanks @bghira !
+
+#### Improvements
+
+* LyCORIS now use [config_sdk](/lycoris/config_sdk.py) for configuration related operation
+
 ## 2025/10/04 update to 3.3.0
 
 #### New Features
