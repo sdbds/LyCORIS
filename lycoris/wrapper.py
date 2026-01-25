@@ -61,7 +61,9 @@ deprecated_arg_dict = {
 }
 
 
-def create_lycoris(module, multiplier=1.0, linear_dim=4, linear_alpha=1, **kwargs):
+def create_lycoris(
+    module, multiplier=1.0, linear_dim=4, linear_alpha=1, warn_on_unmatched=True, **kwargs
+):
     for key, value in list(kwargs.items()):
         if key in deprecated_arg_dict:
             logger.warning(
@@ -140,6 +142,7 @@ def create_lycoris(module, multiplier=1.0, linear_dim=4, linear_alpha=1, **kwarg
         full_matrix=full_matrix,
         bypass_mode=bypass_mode,
         unbalanced_factorization=unbalanced_factorization,
+        warn_on_unmatched=warn_on_unmatched,
     )
 
     return network
@@ -253,6 +256,7 @@ class LycorisNetwork(torch.nn.Module):
         norm_modules=NormModule,
         train_norm=False,
         init_only=False,
+        warn_on_unmatched=True,
         **kwargs,
     ) -> None:
         super().__init__()
@@ -411,11 +415,14 @@ class LycorisNetwork(torch.nn.Module):
             target_replace_modules,
             target_replace_names=[],
             target_exclude_names=[],
-        ) -> List:
+        ) -> tuple:
             logger.info("Create LyCORIS Module")
             loras = []
             lora_map = {}
             next_config = {}
+            # Track which targets were matched
+            matched_modules = set()
+            matched_names = set()
             for name, module in root_module.named_modules():
                 if name in target_exclude_names or any(
                     self.match_fn(t, name) for t in target_exclude_names
@@ -426,6 +433,7 @@ class LycorisNetwork(torch.nn.Module):
                 if module_name in target_replace_modules and not any(
                     self.match_fn(t, name) for t in target_replace_names
                 ):
+                    matched_modules.add(module_name)
                     if module_name in self.MODULE_ALGO_MAP:
                         next_config = self.MODULE_ALGO_MAP[module_name]
                         algo = next_config.get("algo", network_module)
@@ -445,6 +453,13 @@ class LycorisNetwork(torch.nn.Module):
                 elif name in target_replace_names or any(
                     self.match_fn(t, name) for t in target_replace_names
                 ):
+                    # Track which pattern matched and the module class
+                    matched_modules.add(module_name)
+                    if name in target_replace_names:
+                        matched_names.add(name)
+                    for t in target_replace_names:
+                        if self.match_fn(t, name):
+                            matched_names.add(t)
                     conf_from_name = self.find_conf_for_name(name)
                     if conf_from_name is not None:
                         next_config = conf_from_name
@@ -465,30 +480,51 @@ class LycorisNetwork(torch.nn.Module):
                     if lora is not None:
                         lora_map[lora.lora_name] = lora
                         loras.append(lora)
-            return loras
+            return loras, matched_modules, matched_names
 
-        self.loras = create_modules(
+        target_modules = list(
+            set(
+                [
+                    *LycorisNetwork.TARGET_REPLACE_MODULE,
+                    *LycorisNetwork.MODULE_ALGO_MAP.keys(),
+                ]
+            )
+        )
+        target_names = list(
+            set(
+                [
+                    *LycorisNetwork.TARGET_REPLACE_NAME,
+                    *LycorisNetwork.NAME_ALGO_MAP.keys(),
+                ]
+            )
+        )
+        self.loras, matched_modules, matched_names = create_modules(
             LycorisNetwork.LORA_PREFIX,
             module,
-            list(
-                set(
-                    [
-                        *LycorisNetwork.TARGET_REPLACE_MODULE,
-                        *LycorisNetwork.MODULE_ALGO_MAP.keys(),
-                    ]
-                )
-            ),
-            list(
-                set(
-                    [
-                        *LycorisNetwork.TARGET_REPLACE_NAME,
-                        *LycorisNetwork.NAME_ALGO_MAP.keys(),
-                    ]
-                )
-            ),
+            target_modules,
+            target_names,
             target_exclude_names=LycorisNetwork.TARGET_EXCLUDE_NAME,
         )
         logger.info(f"create LyCORIS: {len(self.loras)} modules.")
+
+        # Warn about unmatched targets if enabled
+        if warn_on_unmatched:
+            unmatched_modules = set(target_modules) - matched_modules
+            unmatched_names = set(target_names) - matched_names
+            if unmatched_modules:
+                logger.warning(
+                    f"No modules matched the following target module classes: {sorted(unmatched_modules)}"
+                )
+            if unmatched_names:
+                logger.warning(
+                    f"No modules matched the following target names/patterns: {sorted(unmatched_names)}"
+                )
+            if len(self.loras) == 0:
+                logger.warning(
+                    "No LyCORIS modules were created. "
+                    "This may indicate a mismatch between your LyCORIS config and the model architecture. "
+                    "Please verify your preset/target settings match the model you are using."
+                )
 
         algo_table = {}
         for lora in self.loras:
