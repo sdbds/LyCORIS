@@ -260,6 +260,8 @@ class LycorisNetworkKohya(LycorisNetwork):
         "FinalLayer",  # lumina-image-2
         "QwenImageTransformerBlock",  # Qwen
         "ZImageTransformerBlock",
+        "AceStepEncoderLayer", 
+        "AceStepDiTLayer",
     ]
     UNET_TARGET_REPLACE_NAME = [
         "conv_in",

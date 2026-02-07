@@ -21,6 +21,8 @@ FULL_UNET_MODULES = [
     "FinalLayer",  # lumina-image-2
     "QwenImageTransformerBlock",  # Qwen
     "ZImageTransformerBlock",
+    "AceStepEncoderLayer", 
+    "AceStepDiTLayer",
 ]
 
 FULL_UNET_NAMES = [
@@ -69,6 +71,8 @@ BUILTIN_PRESET_CONFIGS = {
             "FinalLayer",  # lumina-image-2
             "QwenImageTransformerBlock",  # Qwen
             "ZImageTransformerBlock",
+            "AceStepEncoderLayer",
+            "AceStepDiTLayer",
         ],
         unet_target_name=[
             "time_embedding.linear_1",
@@ -94,6 +98,8 @@ BUILTIN_PRESET_CONFIGS = {
             "FinalLayer",  # lumina-image-2
             "QwenImageTransformerBlock",  # Qwen
             "ZImageTransformerBlock",
+            "AceStepEncoderLayer",
+            "AceStepDiTLayer",
         ],
         unet_target_name=[],
         text_encoder_target_module=FULL_TEXT_ENCODER_MODULES,
@@ -141,6 +147,8 @@ BUILTIN_PRESET_CONFIGS = {
             "FinalLayer",  # lumina-image-2
             "QwenImageTransformerBlock",  # Qwen
             "ZImageTransformerBlock",
+            "AceStepEncoderLayer",
+            "AceStepDiTLayer",
         ],
         unet_target_name=[],
         text_encoder_target_module=[],
