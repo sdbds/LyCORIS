@@ -10,6 +10,7 @@ unet_target_module = [
   "DoubleStreamBlock",
   "SingleStreamBlock",
   "SingleDiTBlock",
+  "DiTBlock",                 # MiniMax-H3
   "MMDoubleStreamBlock",       #HunYuanVideo
   "MMSingleStreamBlock",       #HunYuanVideo
   "JointTransformerBlock",     # lumina-image-2

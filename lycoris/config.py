@@ -11,6 +11,7 @@ FULL_UNET_MODULES = [
     "DoubleStreamBlock",  # Flux
     "SingleStreamBlock",  # Flux
     "SingleDiTBlock",  # SD3.5
+    "DiTBlock",  # MiniMax-H3
     "MMDoubleStreamBlock",  # HunYuanVideo
     "MMSingleStreamBlock",  # HunYuanVideo
     "WanAttentionBlock",  # Wan
@@ -72,6 +73,7 @@ BUILTIN_PRESET_CONFIGS = {
             "DoubleStreamBlock",
             "SingleStreamBlock",
             "SingleDiTBlock",
+            "DiTBlock",  # MiniMax-H3
             "MMDoubleStreamBlock",  # HunYuanVideo
             "MMSingleStreamBlock",  # HunYuanVideo
             "WanAttentionBlock",  # Wan
@@ -106,6 +108,7 @@ BUILTIN_PRESET_CONFIGS = {
             "DoubleStreamBlock",
             "SingleStreamBlock",
             "SingleDiTBlock",
+            "DiTBlock",  # MiniMax-H3
             "MMDoubleStreamBlock",  # HunYuanVideo
             "MMSingleStreamBlock",  # HunYuanVideo
             "WanAttentionBlock",  # Wan
@@ -162,6 +165,7 @@ BUILTIN_PRESET_CONFIGS = {
             "DoubleStreamBlock",
             "SingleStreamBlock",
             "SingleDiTBlock",
+            "DiTBlock",  # MiniMax-H3
             "MMDoubleStreamBlock",  # HunYuanVideo
             "MMSingleStreamBlock",  # HunYuanVideo
             "WanAttentionBlock",  # Wan

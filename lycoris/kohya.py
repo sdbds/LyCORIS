@@ -261,6 +261,7 @@ class LycorisNetworkKohya(LycorisNetwork):
         "DoubleStreamBlock",
         "SingleStreamBlock",
         "SingleDiTBlock",
+        "DiTBlock",  # MiniMax-H3
         "MMDoubleStreamBlock",  # HunYuanVideo
         "MMSingleStreamBlock",  # HunYuanVideo
         "WanAttentionBlock",  # Wan
